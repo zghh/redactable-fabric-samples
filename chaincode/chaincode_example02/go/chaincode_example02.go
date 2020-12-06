@@ -25,6 +25,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/zghh/redactable-fabric/core/chaincode/shim"
 	pb "github.com/zghh/redactable-fabric/protos/peer"
@@ -84,9 +85,12 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "query" {
 		// the old "Query" is now implemtned in invoke
 		return t.query(stub, args)
+	} else if function == "history" {
+		// Query the history
+		return t.history(stub, args)
 	}
 
-	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\"")
+	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"history\"")
 }
 
 // Transaction makes payment of X units from A to B
@@ -189,6 +193,35 @@ func (t *SimpleChaincode) query(stub shim.ChaincodeStubInterface, args []string)
 	jsonResp := "{\"Name\":\"" + A + "\",\"Amount\":\"" + string(Avalbytes) + "\"}"
 	fmt.Printf("Query Response:%s\n", jsonResp)
 	return shim.Success(Avalbytes)
+}
+
+// history representing the history of a key
+func (t *SimpleChaincode) history(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting name of the person to query")
+	}
+
+	A := args[0]
+
+	values := []string{}
+	iter, err := stub.GetHistoryForKey(A)
+	if err != nil {
+		jsonResp := "{\"Error\":\"Failed to get history for " + A + "\"}"
+		return shim.Error(jsonResp)
+	}
+
+	defer iter.Close()
+
+	for iter.HasNext() {
+		km, err := iter.Next()
+		if err != nil {
+			jsonResp := "{\"Error\":\"Failed to get history for " + A + "\"}"
+			return shim.Error(jsonResp)
+		}
+		values = append(values, string(km.Value))
+	}
+
+	return shim.Success([]byte(strings.Join(values, "\n")))
 }
 
 func main() {
