@@ -470,34 +470,6 @@ function generateChannelArtifacts() {
   fi
 
   echo
-  echo "#################################################################"
-  echo "#######    Generating anchor peer update for Org1MSP   ##########"
-  echo "#################################################################"
-  set -x
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org1MSP \
-    -mspDir ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp -mspId OrdererMSP -redactableId orderer.example.com
-  res=$?
-  set +x
-  if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for Org1MSP..."
-    exit 1
-  fi
-
-  echo
-  echo "#################################################################"
-  echo "#######    Generating anchor peer update for Org2MSP   ##########"
-  echo "#################################################################"
-  set -x
-  configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate \
-    ./channel-artifacts/Org2MSPanchors.tx -channelID $CHANNEL_NAME -asOrg Org2MSP \
-    -mspDir ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp -mspId OrdererMSP -redactableId orderer.example.com
-  res=$?
-  set +x
-  if [ $res -ne 0 ]; then
-    echo "Failed to generate anchor peer update for Org2MSP..."
-    exit 1
-  fi
-  echo
 }
 
 # Obtain the OS and Architecture string that will be used to select the correct
@@ -548,6 +520,10 @@ elif [ "$MODE" == "generate" ]; then
   EXPMODE="Generating certs and genesis block"
 elif [ "$MODE" == "upgrade" ]; then
   EXPMODE="Upgrading the network"
+elif [ "$MODE" == "setup" ]; then
+  EXPMODE="Setup"
+elif [ "$MODE" == "init" ]; then
+  EXPMODE="Init"
 else
   printHelp
   exit 1
@@ -622,7 +598,7 @@ elif [ "${MODE}" == "restart" ]; then ## Restart the network
 elif [ "${MODE}" == "upgrade" ]; then ## Upgrade the network from version 1.2.x to 1.3.x
   upgradeNetwork
 elif [ "${MODE}" == "setup" ]; then
-  upgradeNetwork
+  setup
 elif [ "${MODE}" == "init" ]; then
   init
 else

@@ -60,7 +60,7 @@ createChannel() {
 }
 
 joinChannel () {
-  peer=1
+  peer=0
   org=1
   joinChannelWithRetry $peer $org
   echo "===================== peer${peer}.org${org} joined channel '$CHANNEL_NAME' ===================== "
