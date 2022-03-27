@@ -149,6 +149,18 @@ function checkPrereqs() {
   done
 }
 
+function setup() {
+    if [ ! -d "crypto-config" ]; then
+        generateCerts
+        replacePrivateKey
+        generateChannelArtifacts
+    fi
+}
+
+function init() {
+    docker exec cli scripts/script.sh $CHANNEL_NAME $CLI_DELAY $LANGUAGE $CLI_TIMEOUT $VERBOSE $NO_CHAINCODE
+} 
+
 # Generate the needed certificates, the genesis block and start the network.
 function networkUp() {
   checkPrereqs
@@ -518,7 +530,7 @@ LANGUAGE=golang
 # default image tag
 IMAGETAG="latest"
 # default consensus type
-CONSENSUS_TYPE="solo"
+CONSENSUS_TYPE="etcdraft"
 # Parse commandline args
 if [ "$1" = "-m" ]; then # supports old usage, muscle memory is powerful!
   shift
@@ -609,6 +621,10 @@ elif [ "${MODE}" == "restart" ]; then ## Restart the network
   networkUp
 elif [ "${MODE}" == "upgrade" ]; then ## Upgrade the network from version 1.2.x to 1.3.x
   upgradeNetwork
+elif [ "${MODE}" == "setup" ]; then
+  upgradeNetwork
+elif [ "${MODE}" == "init" ]; then
+  init
 else
   printHelp
   exit 1
