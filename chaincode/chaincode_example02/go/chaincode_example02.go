@@ -156,22 +156,19 @@ func (t *SimpleChaincode) invoke(stub shim.ChaincodeStubInterface, args []string
 // Set an entity to state
 func (t *SimpleChaincode) set(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
+                return shim.Error("Incorrect number of arguments. Expecting 2")
+        }
 
-	A := args[0]
-	Aval, err := strconv.Atoi(args[1])
-	if err != nil {
-		return shim.Error("Expecting integer value for asset holding")
-	}
+        A := args[0]
+        Aval := args[1]
 
-	// Write the state to the ledger
-	err = stub.PutState(A, []byte(strconv.Itoa(Aval)))
-	if err != nil {
-		return shim.Error(err.Error())
-	}
+        // Write the state to the ledger
+        err := stub.PutState(A, []byte(Aval))
+        if err != nil {
+                return shim.Error(err.Error())
+        }
 
-	return shim.Success(nil)
+        return shim.Success(nil)
 }
 
 // Deletes an entity from state
