@@ -20,7 +20,7 @@ services:
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       - ORDERER_GENERAL_REDACTABLEID=orderer.example.com
-      - ORDERER_GENERAL_ClUSTER_SENDBUFFERSIZE=1000
+      - ORDERER_GENERAL_CLUSTER_SENDBUFFERSIZE=1000
       # enabled TLS
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
