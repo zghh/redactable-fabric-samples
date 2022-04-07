@@ -91,6 +91,9 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	} else if function == "set" {
 		// Set an entity to state
 		return t.set(stub, args)
+	} else if function == "readAndWrite" {
+		// Read and write state
+		return t.readAndWrite(stub, args)
 	}
 
 	return shim.Error("Invalid invoke function name. Expecting \"invoke\" \"delete\" \"query\" \"history\"")
@@ -246,6 +249,25 @@ func (t *SimpleChaincode) history(stub shim.ChaincodeStubInterface, args []strin
 	}
 
 	return shim.Success([]byte(strings.Join(values, "\n")))
+}
+
+// readAndWrite
+func (t *SimpleChaincode) readAndWrite(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+        if len(args) != 3 {
+                return shim.Error("Incorrect number of arguments.")
+        }
+
+	_, err := stub.GetState(args[0])
+        if err != nil {
+                return shim.Error("Failed to get state")
+        }
+
+	err = stub.PutState(args[1], []byte(args[2]))
+        if err != nil {
+                return shim.Error(err.Error())
+        }
+
+	return shim.Success(nil)
 }
 
 func main() {
