@@ -330,6 +330,9 @@ Channel: &ChannelDefaults
     Capabilities:
         <<: *ChannelCapabilities
 
+    Redaction:
+        AppendInBlock: false
+
 ################################################################################
 #
 #   Profile
