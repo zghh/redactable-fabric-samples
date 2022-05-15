@@ -22,6 +22,8 @@ services:
     container_name: orderer2.example.com
     networks:
       - byfn
+    environment:
+      - ORDERER_GENERAL_REDACTABLEID=orderer2.example.com
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/example.com/orderers/orderer2.example.com/msp:/var/hyperledger/orderer/msp
@@ -37,6 +39,8 @@ services:
     container_name: orderer3.example.com
     networks:
       - byfn
+    environment:
+      - ORDERER_GENERAL_REDACTABLEID=orderer3.example.com
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp:/var/hyperledger/orderer/msp
@@ -52,6 +56,8 @@ services:
     container_name: orderer4.example.com
     networks:
       - byfn
+    environment:
+      - ORDERER_GENERAL_REDACTABLEID=orderer4.example.com
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/example.com/orderers/orderer4.example.com/msp:/var/hyperledger/orderer/msp
@@ -67,6 +73,8 @@ services:
     container_name: orderer5.example.com
     networks:
       - byfn
+    environment:
+      - ORDERER_GENERAL_REDACTABLEID=orderer5.example.com
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
       - ./crypto-config/ordererOrganizations/example.com/orderers/orderer5.example.com/msp:/var/hyperledger/orderer/msp

@@ -331,7 +331,7 @@ Channel: &ChannelDefaults
         <<: *ChannelCapabilities
 
     Redaction:
-        AppendInBlock: false
+        AppendInBlock: true
 
 ################################################################################
 #

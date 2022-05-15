@@ -87,3 +87,6 @@ PeerOrgs:
       Count: 2
     Users:
       Count: 1
+
+Redaction:
+  MasterPerOrg: false
