@@ -25,7 +25,7 @@ LANGUAGE=`echo "$LANGUAGE" | tr [:upper:] [:lower:]`
 COUNTER=1
 MAX_RETRY=10
 
-CC_SRC_PATH="github.com/chaincode/chaincode_example02/go/"
+CC_SRC_PATH="github.com/chaincode/invoice/go/"
 if [ "$LANGUAGE" = "node" ]; then
   CC_SRC_PATH="/opt/gopath/src/github.com/chaincode/chaincode_example02/node/"
 fi
@@ -62,9 +62,6 @@ createChannel() {
 joinChannel () {
   for org in 1 2; do
       for peer in 0 1; do
-        if [ $peer -eq 1 -a $org -eq 1 ]; then
-          continue
-        fi
         joinChannelWithRetry $peer $org
         echo "===================== peer${peer}.org${org} joined channel '$CHANNEL_NAME' ===================== "
         sleep $DELAY
@@ -81,12 +78,6 @@ createChannel
 echo "Having all peers join the channel..."
 joinChannel
 
-## Set the anchor peers for each org in the channel
-echo "Updating anchor peers for org1..."
-updateAnchorPeers 0 1
-echo "Updating anchor peers for org2..."
-updateAnchorPeers 0 2
-
 if [ "${NO_CHAINCODE}" != "true" ]; then
 
   ## Install chaincode on peer0.org1 and peer0.org2
@@ -98,22 +89,6 @@ if [ "${NO_CHAINCODE}" != "true" ]; then
   # Instantiate chaincode on peer0.org2
   echo "Instantiating chaincode on peer0.org2..."
   instantiateChaincode 0 2
-
-  # Query chaincode on peer0.org1
-  echo "Querying chaincode on peer0.org1..."
-  chaincodeQuery 0 1 100
-
-  # Invoke chaincode on peer0.org1 and peer0.org2
-  echo "Sending invoke transaction on peer0.org1 peer0.org2..."
-  chaincodeInvoke 0 1 0 2
-  
-  ## Install chaincode on peer1.org2
-  echo "Installing chaincode on peer1.org2..."
-  installChaincode 1 2
-
-  # Query on chaincode on peer1.org2, check if the result is 90
-  echo "Querying chaincode on peer1.org2..."
-  chaincodeQuery 1 2 90
   
 fi
 
